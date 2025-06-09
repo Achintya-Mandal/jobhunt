@@ -24,7 +24,7 @@ if submit_button and query and minutes:
         f"&keywords={encoded_query}"
         f"&origin=JOBS_HOME_SEARCH_BUTTON"
     )
-    webbrowser.open(url)
+    st.markdown(f"[Click here to view jobs on LinkedIn]({url})", unsafe_allow_html=True)
 
 # Display chat history
 
