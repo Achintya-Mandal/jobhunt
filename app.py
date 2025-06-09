@@ -39,8 +39,8 @@ if submit_button and input_string:
 
 # Display chat history
 
-if st.session_state.chat_history:
-    for chat in st.session_state.chat_history:
-        st.write(f"**You 😃:** {chat['user']}")
-        st.write(f"**PMD Bot 🤖:** {chat['bot']}")
+# if st.session_state.chat_history:
+#     for chat in st.session_state.chat_history:
+#         st.write(f"**You 😃:** {chat['user']}")
+#         st.write(f"**PMD Bot 🤖:** {chat['bot']}")
 
