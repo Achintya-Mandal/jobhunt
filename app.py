@@ -1,62 +1,42 @@
-import requests, urllib3
 import streamlit as st
+import requests
 
-# This example uses unverified HTTPS rquests for simplicity. However, note that these are strongly discouraged.
-# Disable the corresponding warnings, see https://urllib3.readthedocs.io/en/latest/advanced-usage.html#tls-warnings
-urllib3.disable_warnings()
+st.title("PMD Functional Chatbot")
 
-# Configure the applicaction
-st.set_page_config(page_title="PMD AI Assitant",
-                   initial_sidebar_state='collapsed')
-st.title('PMD AI Assitant')
-st.sidebar.write('Detailed log')
+# Initialize session state for chat history
+if 'chat_history' not in st.session_state:
+    st.session_state.chat_history = []
 
-# Initial setup if application is running for the first time
-def initial_setup():
-    st.session_state["chat_history"] = []
-    st.session_state["chat_history_debuglog"] = []
-    msg_welcome = "Hello there, how can I help?"
-    st.session_state["chat_history"].append({"role": "assistant", "content": msg_welcome})
-    st.session_state["chat_history_debuglog"].append({"role": "assistant", "content": msg_welcome})
+with st.form(key='chat_form'):
+    input_string = st.text_input("Enter your query :")
+    submit_button = st.form_submit_button(label='Send')
 
-if "chat_history" not in st.session_state:
-    initial_setup()
-  
-# Process user input (add to the session, get response, add response to the session)
-def chat_actions():   
-
-    # Add user input to session
-    st.session_state["chat_history"].append({"role": "user", "content": st.session_state["chat_input"]})
-    st.session_state["chat_history_debuglog"].append({"role": "user", "content": st.session_state["chat_input"]})
-
-    # Get answer from api
-    with st.spinner('Hold on...'):
-        user_input = st.session_state["chat_input"]
-        backend_api = "https://synonyms_service-sleepy-warthog-hg.cfapps.eu12.hana.ondemand.com/synonym_query?input_string=" + user_input
-        # paylod = {'input_string': 'hello'}
-        # headers = {'Accept' : 'application/json', 'Content-Type' : 'application/json'}
-        r = requests.get(backend_api, verify=False) #json=paylod, headers=headers, verify=False)
-        response = r.text.strip()
-        faq_response = response#['btpaiagent_response']
-        #faq_response_log = response['btpaiagent_response_log']
-
-    # Add api response to the sessions
-    st.session_state["chat_history"].append({"role": "assistant", "content": faq_response})
-    #st.session_state["chat_history_debuglog"].append({"role": "assistant", "content": faq_response_log})
-
-# Get input from user
-st.chat_input("Enter your message", on_submit=chat_actions, key="chat_input")
-
-# Display the conversation on the main page
-for i in st.session_state["chat_history"]:
-    if i["role"] == 'assistant':
-        st.chat_message(name=i["role"], avatar="🤖").write(i["content"])
+if submit_button and input_string:
+    backend_api = "https://synonyms_service-sleepy-warthog-hg.cfapps.eu12.hana.ondemand.com/synonym_query?input_string=" + input_string
+    response = requests.get(
+        backend_api,
+        #params={"message": input_string},  # Use 'params' for GET requests
+        verify=False  # Disable SSL verification
+    )
+    if response.status_code == 200:
+        try:
+            # Handle plain text response
+            response_message = response.text.strip()  # Use response.text instead of response.json()
+            if response_message:
+                # Append user input and response to chat history
+                st.session_state.chat_history.append({"user": input_string, "bot": response_message})
+            else:
+                st.write("Error: Empty response from the server.")
+        except Exception as e:
+            st.write("Error: Unable to process the response.")
+            st.write(f"Exception: {e}")
     else:
-        st.chat_message(name=i["role"], avatar="😃").write(i["content"])
+        st.write(f"Error: {response.status_code} - {response.reason}")
+        st.write("Response content:", response.text)
 
-# Display the conversation'a more detailed log on the side panel
-for i in st.session_state["chat_history_debuglog"]:
-    if i["role"] == 'assistant':
-        st.sidebar.chat_message(name=i["role"], avatar="🤖").write(i["content"])
-    else:
-        st.sidebar.chat_message(name=i["role"], avatar="😃").write(i["content"])
+# Display chat history
+if st.session_state.chat_history:
+    for chat in st.session_state.chat_history:
+        st.write(f"**You 😃:** {chat['user']}")
+        st.write(f"**PMD Bot 🤖:** {chat['bot']}")
+
