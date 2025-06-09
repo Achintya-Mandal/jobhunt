@@ -4,7 +4,7 @@ import webbrowser
 import urllib.parse
 import os
 
-st.title("Job Hunt Linked")
+st.title("Job Hunt Link")
 
 # Initialize session state for chat history
 if 'chat_history' not in st.session_state:
