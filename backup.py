@@ -2,7 +2,6 @@ import streamlit as st
 import requests
 import webbrowser
 import urllib.parse
-import os
 
 st.title("Job Hunt LinkedIn")
 
@@ -29,22 +28,8 @@ if submit_button and query and minutes:
 
 # Display chat history
 
-# Persistent page visit counter at the bottom
-counter_file = "visit_counter.txt"
-
-def get_counter():
-    if not os.path.exists(counter_file):
-        with open(counter_file, "w") as f:
-            f.write("0")
-    with open(counter_file, "r") as f:
-        return int(f.read())
-
-def increment_counter():
-    count = get_counter() + 1
-    with open(counter_file, "w") as f:
-        f.write(str(count))
-    return count
-
-page_visits = increment_counter()
-st.markdown(f"<hr><b>Total page visits: {page_visits}</b>", unsafe_allow_html=True)
+# if st.session_state.chat_history:
+#     for chat in st.session_state.chat_history:
+#         st.write(f"**You 😃:** {chat['user']}")
+#         st.write(f"**PMD Bot 🤖:** {chat['bot']}")
 
