@@ -28,7 +28,7 @@ if submit_button and query and minutes:
         f"https://www.linkedin.com/jobs/search-results/"
         f"?f_TPR=r{input_string}"
         f"&keywords={encoded_query}"
-        f"&origin=JOBS_HOME_SEARCH_BUTTON"
+        f"&origin=JOB_SEARCH_PAGE_JOB_FILTER"
     )
     st.markdown(f"[Click here to view jobs on LinkedIn]({url})", unsafe_allow_html=True)
 
