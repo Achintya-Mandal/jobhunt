@@ -25,7 +25,7 @@ if submit_button and query and minutes:
     input_string = str(seconds)
     encoded_query = urllib.parse.quote(query)
     url = (
-        f"https://www.linkedin.com/jobs/search-results/"
+        f"https://www.linkedin.com/jobs/search/"
         f"?f_TPR=r{input_string}"
         f"&keywords={encoded_query}"
         f"&origin=JOB_SEARCH_PAGE_JOB_FILTER"
