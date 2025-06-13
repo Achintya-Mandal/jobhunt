@@ -51,8 +51,7 @@ def increment_counter():
     return count
 
 page_visits = increment_counter()
-//st.markdown(f"<hr><b>Total page visits: {page_visits}</b>", unsafe_allow_html=True)
-
+#st.markdown(f"<hr><b>Total page visits: {page_visits}</b>", unsafe_allow_html=True)
 st.markdown(
     f"""<hr><div style='text-align: center;'>
         <b>Built by <a href="https://www.linkedin.com/in/rockachi" target="_blank" style="text-decoration: none; color: inherit;">
